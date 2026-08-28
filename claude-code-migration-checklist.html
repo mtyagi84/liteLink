@@ -1,0 +1,476 @@
+<!doctype html>
+<title>Laptop Handoff Plan</title>
+<style>
+  :root {
+    --bg: #f4f6f9;
+    --surface: #ffffff;
+    --surface-sunken: #eef1f6;
+    --text: #1a2130;
+    --muted: #5c6675;
+    --border: #dbe1ea;
+    --accent: #3452d9;
+    --accent-ink: #24399e;
+    --accent-soft: #e9edfc;
+    --mono-ink: #384258;
+    --critical-bg: #fbe9e6;
+    --critical-ink: #ad3a24;
+    --safe-bg: #e4f4ec;
+    --safe-ink: #1c7a4c;
+    --shadow: 0 1px 2px rgba(26, 33, 48, 0.04), 0 8px 24px -12px rgba(26, 33, 48, 0.12);
+  }
+
+  :root:not([data-theme="light"]) {
+    @media (prefers-color-scheme: dark) {
+      --bg: #12151d;
+      --surface: #1a1e29;
+      --surface-sunken: #20242f;
+      --text: #e8eaf0;
+      --muted: #9299ab;
+      --border: #2c3140;
+      --accent: #7d92ff;
+      --accent-ink: #b7c2ff;
+      --accent-soft: #232a45;
+      --mono-ink: #b6bdd0;
+      --critical-bg: #3a201c;
+      --critical-ink: #f0917c;
+      --safe-bg: #16302477;
+      --safe-ink: #7ed9ac;
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px -12px rgba(0, 0, 0, 0.5);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --bg: #12151d;
+    --surface: #1a1e29;
+    --surface-sunken: #20242f;
+    --text: #e8eaf0;
+    --muted: #9299ab;
+    --border: #2c3140;
+    --accent: #7d92ff;
+    --accent-ink: #b7c2ff;
+    --accent-soft: #232a45;
+    --mono-ink: #b6bdd0;
+    --critical-bg: #3a201c;
+    --critical-ink: #f0917c;
+    --safe-bg: #163024;
+    --safe-ink: #7ed9ac;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px -12px rgba(0, 0, 0, 0.5);
+  }
+
+  * { box-sizing: border-box; }
+
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Public Sans", -apple-system, "Segoe UI", sans-serif;
+    font-size: 16px;
+    line-height: 1.55;
+  }
+
+  .page {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 56px 28px 90px;
+  }
+
+  header.masthead {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-bottom: 28px;
+    margin-bottom: 36px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 0.78rem;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--accent-ink);
+  }
+
+  .eyebrow::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+    background: var(--accent);
+    flex: none;
+  }
+
+  h1 {
+    font-family: "Archivo", "Public Sans", sans-serif;
+    font-weight: 700;
+    font-size: clamp(1.7rem, 3.6vw, 2.35rem);
+    letter-spacing: -0.01em;
+    margin: 0;
+    text-wrap: balance;
+  }
+
+  .dek {
+    color: var(--muted);
+    font-size: 1.02rem;
+    max-width: 62ch;
+    margin: 0;
+  }
+
+  .dek code { white-space: normal; }
+
+  h2 {
+    font-family: "Archivo", "Public Sans", sans-serif;
+    font-weight: 600;
+    font-size: 1.24rem;
+    letter-spacing: -0.005em;
+    margin: 0 0 4px;
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+  }
+
+  h2 .step-index {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--accent);
+    background: var(--accent-soft);
+    border-radius: 5px;
+    padding: 2px 8px;
+  }
+
+  section.block {
+    margin-top: 44px;
+  }
+
+  .block-intro {
+    color: var(--muted);
+    margin: 4px 0 16px;
+    max-width: 68ch;
+  }
+
+  .table-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    background: var(--surface);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.93rem;
+  }
+
+  thead th {
+    background: var(--surface-sunken);
+    color: var(--muted);
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-weight: 500;
+    font-size: 0.74rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-align: left;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+
+  tbody td {
+    padding: 13px 16px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+
+  tbody tr:last-child td { border-bottom: none; }
+
+  tbody tr:hover td { background: var(--surface-sunken); }
+
+  td.col-what, td.col-step {
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  td.check {
+    width: 40px;
+    text-align: center;
+  }
+
+  .box {
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    border: 1.6px solid var(--muted);
+    border-radius: 4px;
+  }
+
+  code {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 0.85em;
+    color: var(--mono-ink);
+    background: var(--surface-sunken);
+    padding: 1px 6px;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+
+  pre {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 0.86rem;
+    color: var(--mono-ink);
+    background: var(--surface-sunken);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    overflow-x: auto;
+    margin: 14px 0 18px;
+  }
+
+  .callout {
+    display: flex;
+    gap: 10px;
+    background: var(--accent-soft);
+    border-radius: 8px;
+    padding: 12px 15px;
+    margin: 0 0 20px;
+    font-size: 0.9rem;
+    color: var(--text);
+  }
+
+  .callout::before {
+    content: "!";
+    flex: none;
+    width: 19px;
+    height: 19px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--surface);
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 0.72rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1px;
+  }
+
+  .pill {
+    display: inline-block;
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    padding: 2px 9px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+
+  .pill-critical { background: var(--critical-bg); color: var(--critical-ink); }
+  .pill-safe { background: var(--safe-bg); color: var(--safe-ink); }
+
+  footer.colophon {
+    margin-top: 60px;
+    padding-top: 18px;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 0.8rem;
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+  }
+
+  @media (max-width: 640px) {
+    thead { display: none; }
+    table, tbody, tr, td { display: block; width: 100%; }
+    tbody tr {
+      border-bottom: 1px solid var(--border);
+      padding: 12px 16px;
+    }
+    tbody td {
+      border: none;
+      padding: 4px 0;
+    }
+    td.check { display: none; }
+    td::before {
+      content: attr(data-label);
+      display: block;
+      font-family: "JetBrains Mono", ui-monospace, monospace;
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      margin-bottom: 2px;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    tbody tr td { transition: background-color 0.12s ease; }
+  }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700&family=Public+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<div class="page">
+
+  <header class="masthead">
+    <div class="eyebrow">Continuity plan · Claude Code</div>
+    <h1>Laptop Handoff Plan</h1>
+    <p class="dek">A record of everything Claude Code keeps outside your project repos — memory, chat history, skills, and settings — plus the exact steps to move it to a new machine without losing any of it.</p>
+  </header>
+
+  <section class="block">
+    <h2><span class="step-index">MAP</span> What lives where</h2>
+    <p class="block-intro">Project code is already safe in git. Everything below is the part that isn't — it lives only in your Windows user profile.</p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>What</th><th>Location</th><th>Contains</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="col-what" data-label="What">Chat history</td>
+            <td data-label="Location"><code>~\.claude\projects\</code></td>
+            <td data-label="Contains">Full transcript of every session, grouped per project folder</td>
+          </tr>
+          <tr>
+            <td class="col-what" data-label="What">Auto-memory</td>
+            <td data-label="Location"><code>~\.claude\projects\&lt;project&gt;\memory\</code></td>
+            <td data-label="Contains"><code>MEMORY.md</code> index + individual memory files, per project</td>
+          </tr>
+          <tr>
+            <td class="col-what" data-label="What">Global settings</td>
+            <td data-label="Location"><code>~\.claude\settings.json</code></td>
+            <td data-label="Contains">Permissions, hooks, model preferences</td>
+          </tr>
+          <tr>
+            <td class="col-what" data-label="What">Plugins &amp; skills</td>
+            <td data-label="Location"><code>~\.claude\plugins\</code></td>
+            <td data-label="Contains">Marketplaces, installed plugin list, plugin data — <code>superpowers</code>, <code>apex</code>, <code>remember</code></td>
+          </tr>
+          <tr>
+            <td class="col-what" data-label="What">Login</td>
+            <td data-label="Location"><code>~\.claude\.credentials.json</code></td>
+            <td data-label="Contains">Claude account token</td>
+          </tr>
+          <tr>
+            <td class="col-what" data-label="What">Keybindings</td>
+            <td data-label="Location"><code>~\.claude\keybindings.json</code></td>
+            <td data-label="Contains">Custom key rebinds, if any are set</td>
+          </tr>
+          <tr>
+            <td class="col-what" data-label="What">Project code</td>
+            <td data-label="Location"><code>C:\Manglu\VMS\</code>, <code>C:\Manglu\VMS\ZYX\</code></td>
+            <td data-label="Contains">Already in git — VMS repo, ZYX/liteLink repo. Safe as long as it's pushed.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="block">
+    <h2><span class="step-index">01</span> Set up today, before you need it</h2>
+    <p class="block-intro">These three take five minutes now and prevent a bad week later.</p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th></th><th>Action</th><th>Priority</th><th>Why</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="check" data-label=""><span class="box"></span></td>
+            <td class="col-step" data-label="Action">Back up the <code>.claude</code> folder</td>
+            <td data-label="Priority"><span class="pill pill-critical">critical</span></td>
+            <td data-label="Why">Not tracked in git anywhere — the only copy of memory, history, and skills</td>
+          </tr>
+          <tr>
+            <td class="check" data-label=""><span class="box"></span></td>
+            <td class="col-step" data-label="Action">Confirm every project has a pushed remote</td>
+            <td data-label="Priority"><span class="pill pill-critical">critical</span></td>
+            <td data-label="Why">Anything unpushed exists only on this laptop</td>
+          </tr>
+          <tr>
+            <td class="check" data-label=""><span class="box"></span></td>
+            <td class="col-step" data-label="Action">Put the backup on a schedule</td>
+            <td data-label="Priority"><span class="pill pill-safe">recommended</span></td>
+            <td data-label="Why">Weekly, so it's never more than a few days stale</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <pre>robocopy "C:\Users\&lt;user&gt;\.claude" "D:\Backup\claude-backup" /MIR /XD cache downloads shell-snapshots</pre>
+    <div class="callout">Excludes <code>cache</code>, <code>downloads</code>, <code>shell-snapshots</code> — disposable, regenerated automatically. Point the destination at OneDrive, an external drive, or a private git repo.</div>
+  </section>
+
+  <section class="block">
+    <h2><span class="step-index">02</span> On the new laptop</h2>
+    <p class="block-intro">Run in order — path 5 is the one step that silently breaks memory if skipped.</p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th></th><th>Step</th><th>Notes</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="check" data-label=""><span class="box"></span></td>
+            <td class="col-step" data-label="Step">Install Claude Code</td>
+            <td data-label="Notes">—</td>
+          </tr>
+          <tr>
+            <td class="check" data-label=""><span class="box"></span></td>
+            <td class="col-step" data-label="Step">Log in</td>
+            <td data-label="Notes">A fresh login is cleaner than restoring <code>.credentials.json</code>, but either works</td>
+          </tr>
+          <tr>
+            <td class="check" data-label=""><span class="box"></span></td>
+            <td class="col-step" data-label="Step">Copy the backed-up <code>.claude</code> folder into place</td>
+            <td data-label="Notes">Target: <code>C:\Users\&lt;newuser&gt;\.claude</code></td>
+          </tr>
+          <tr>
+            <td class="check" data-label=""><span class="box"></span></td>
+            <td class="col-step" data-label="Step">Clone each project repo</td>
+            <td data-label="Notes">VMS, liteLink/ZYX, etc.</td>
+          </tr>
+          <tr>
+            <td class="check" data-label=""><span class="box"></span></td>
+            <td class="col-step" data-label="Step">Keep the same drive letter and folder paths</td>
+            <td data-label="Notes">Memory is keyed by folder path — <code>c--Manglu-VMS-ZYX</code> comes from <code>C:\Manglu\VMS\ZYX</code>. Match paths and memory resolves with no manual edits.</td>
+          </tr>
+          <tr>
+            <td class="check" data-label=""><span class="box"></span></td>
+            <td class="col-step" data-label="Step">Open a session per project and verify memory loaded</td>
+            <td data-label="Notes">Ask: <em>"what do you remember about this project?"</em></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="block">
+    <h2><span class="step-index">—</span> What a perfect backup still won't save</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Risk</th><th>Mitigation</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="col-what" data-label="Risk">In-flight, unsaved session state</td>
+            <td data-label="Mitigation">Let active sessions wrap up before copying — don't migrate mid-session</td>
+          </tr>
+          <tr>
+            <td class="col-what" data-label="Risk">Credentials stored outside <code>.claude</code></td>
+            <td data-label="Mitigation">Check Windows Credential Manager for any tool-specific tokens</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer class="colophon">ZYX repo · liteLink · drafted 2026-08-28</footer>
+
+</div>
